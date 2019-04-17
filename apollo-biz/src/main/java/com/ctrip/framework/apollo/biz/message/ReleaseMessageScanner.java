@@ -20,6 +20,7 @@ import com.ctrip.framework.apollo.tracer.spi.Transaction;
 import com.google.common.collect.Lists;
 
 /**
+ * 注册扫描器，定时扫描ReleaseMessage表，判断是否有新的配置发布
  * @author Jason Song(song_s@ctrip.com)
  */
 public class ReleaseMessageScanner implements InitializingBean {
@@ -28,24 +29,42 @@ public class ReleaseMessageScanner implements InitializingBean {
   private BizConfig bizConfig;
   @Autowired
   private ReleaseMessageRepository releaseMessageRepository;
+  /**
+   * 从 DB 中扫描 ReleaseMessage 表的频率，单位：毫秒
+   */
   private int databaseScanInterval;
+  /**
+   * 监听器数组
+   */
   private List<ReleaseMessageListener> listeners;
+  /**
+   * 定时任务服务
+   */
   private ScheduledExecutorService executorService;
+  /**
+   * 最后扫描到的 ReleaseMessage 的编号
+   */
   private long maxIdScanned;
 
   public ReleaseMessageScanner() {
+    // 创建监听器数组
     listeners = Lists.newCopyOnWriteArrayList();
+    // 创建 ScheduledExecutorService 对象
     executorService = Executors.newScheduledThreadPool(1, ApolloThreadFactory
         .create("ReleaseMessageScanner", true));
   }
 
   @Override
   public void afterPropertiesSet() throws Exception {
+    // 从 ServerConfig 中获得频率
     databaseScanInterval = bizConfig.releaseMessageScanIntervalInMilli();
+    // 获得最大的 ReleaseMessage 的编号
     maxIdScanned = loadLargestMessageId();
+    // 创建从 DB 中扫描 ReleaseMessage 表的定时任务
     executorService.scheduleWithFixedDelay((Runnable) () -> {
       Transaction transaction = Tracer.newTransaction("Apollo.ReleaseMessageScanner", "scanMessage");
       try {
+        // 从 DB 中，扫描 ReleaseMessage 们
         scanMessages();
         transaction.setStatus(Transaction.SUCCESS);
       } catch (Throwable ex) {
@@ -90,7 +109,9 @@ public class ReleaseMessageScanner implements InitializingBean {
     if (CollectionUtils.isEmpty(releaseMessages)) {
       return false;
     }
+    // 触发监听器
     fireMessageScanned(releaseMessages);
+    // 获得新的 maxIdScanned ，取最后一条记录
     int messageScanned = releaseMessages.size();
     maxIdScanned = releaseMessages.get(messageScanned - 1).getId();
     return messageScanned == 500;

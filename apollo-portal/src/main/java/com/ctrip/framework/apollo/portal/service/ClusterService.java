@@ -30,6 +30,8 @@ public class ClusterService {
     if (!clusterAPI.isClusterUnique(cluster.getAppId(), env, cluster.getName())) {
       throw new BadRequestException(String.format("cluster %s already exists.", cluster.getName()));
     }
+    // 调用 Admin Service 接口创建 Cluster
+    // Portal 数据库不保存
     ClusterDTO clusterDTO = clusterAPI.create(env, cluster);
 
     Tracer.logEvent(TracerEventType.CREATE_CLUSTER, cluster.getAppId(), "0", cluster.getName());

@@ -111,6 +111,7 @@ public class AppNamespaceService {
       throw new BadRequestException("App not exist. AppId = " + appId);
     }
 
+    // 拼接 AppNamespace 的 `name` 属性。
     StringBuilder appNamespaceName = new StringBuilder();
     //add prefix postfix
     appNamespaceName
@@ -137,9 +138,11 @@ public class AppNamespaceService {
 
     // globally uniqueness check for public app namespace
     if (appNamespace.isPublic()) {
+      // 公用类型，校验 `name` 在全局唯一
       checkAppNamespaceGlobalUniqueness(appNamespace);
     } else {
       // check private app namespace
+      // 私有类型，校验 `name` 在 App 下唯一
       if (appNamespaceRepository.findByAppIdAndName(appNamespace.getAppId(), appNamespace.getName()) != null) {
         throw new BadRequestException("Private AppNamespace " + appNamespace.getName() + " already exists!");
       }

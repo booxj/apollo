@@ -331,6 +331,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -644,21 +652,21 @@
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-web</artifactId>
-						<version>${spring-boot.version}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>org.apache.tomcat.embed</groupId>
-								<artifactId>tomcat-embed-logging-juli</artifactId>
-							</exclusion>
-							<!-- use ctrip modified version instead -->
-							<exclusion>
-								<groupId>org.apache.tomcat.embed</groupId>
-								<artifactId>tomcat-embed-core</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-web</artifactId>
+					<version>${spring-boot.version}</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.apache.tomcat.embed</groupId>
+							<artifactId>tomcat-embed-logging-juli</artifactId>
+						</exclusion>
+						<!-- use ctrip modified version instead -->
+						<exclusion>
+							<groupId>org.apache.tomcat.embed</groupId>
+							<artifactId>tomcat-embed-core</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
 					<!-- eureka -->
 					<dependency>
 						<groupId>org.springframework.cloud</groupId>

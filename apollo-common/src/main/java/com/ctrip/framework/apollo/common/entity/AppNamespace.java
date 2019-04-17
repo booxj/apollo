@@ -31,9 +31,17 @@ public class AppNamespace extends BaseEntity {
   @Column(name = "AppId", nullable = false)
   private String appId;
 
+  /**
+   * @see ConfigFileFormat
+   */
   @Column(name = "Format", nullable = false)
   private String format;
 
+  /**
+   * 是否公用的
+   * private: 只能被所属的应用获取到
+   * public:  能被任何应用获取
+   */
   @Column(name = "IsPublic", columnDefinition = "Bit default '0'")
   private boolean isPublic = false;
 

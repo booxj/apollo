@@ -21,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 /**
  * Create by zhangzheng on 2018/3/6
+ * 只需要一份，持有springValueRegistry和beanFactory 可以拿到所有bean信息
  */
 public class AutoUpdateConfigChangeListener implements ConfigChangeListener{
   private static final Logger logger = LoggerFactory.getLogger(AutoUpdateConfigChangeListener.class);

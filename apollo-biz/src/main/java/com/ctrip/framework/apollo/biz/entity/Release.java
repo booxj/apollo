@@ -33,6 +33,9 @@ public class Release extends BaseEntity {
   @Column(name = "NamespaceName", nullable = false)
   private String namespaceName;
 
+  /**
+   * 配置 Map 字符串，使用 JSON 格式化成字符串
+   */
   @Column(name = "Configurations", nullable = false)
   @Lob
   private String configurations;
@@ -40,6 +43,9 @@ public class Release extends BaseEntity {
   @Column(name = "Comment", nullable = false)
   private String comment;
 
+  /**
+   * 是否被回滚（放弃）
+   */
   @Column(name = "IsAbandoned", columnDefinition = "Bit default '0'")
   private boolean isAbandoned;
 

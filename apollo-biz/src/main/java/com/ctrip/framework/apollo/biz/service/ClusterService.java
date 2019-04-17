@@ -67,6 +67,7 @@ public class ClusterService {
 
     Cluster savedCluster = saveWithoutInstanceOfAppNamespaces(entity);
 
+    // 创建 Cluster 的 Namespace 们
     namespaceService.instanceOfAppNamespaces(savedCluster.getAppId(), savedCluster.getName(),
                                              savedCluster.getDataChangeCreatedBy());
 

@@ -19,6 +19,7 @@ public abstract class AbstractConfigRepository implements ConfigRepository {
 
   protected boolean trySync() {
     try {
+      // 同步
       sync();
       return true;
     } catch (Throwable ex) {
@@ -30,6 +31,9 @@ public abstract class AbstractConfigRepository implements ConfigRepository {
     return false;
   }
 
+  /**
+   * 同步配置
+   */
   protected abstract void sync();
 
   @Override
@@ -44,9 +48,17 @@ public abstract class AbstractConfigRepository implements ConfigRepository {
     m_listeners.remove(listener);
   }
 
+  /**
+   * 触发监听器们
+   *
+   * @param namespace Namespace 名字
+   * @param newProperties 配置
+   */
   protected void fireRepositoryChange(String namespace, Properties newProperties) {
+    // 循环 RepositoryChangeListener 数组
     for (RepositoryChangeListener listener : m_listeners) {
       try {
+        // 触发监听器
         listener.onRepositoryChange(namespace, newProperties);
       } catch (Throwable ex) {
         Tracer.logError(ex);

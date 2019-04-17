@@ -51,6 +51,8 @@ public class ReleaseService {
     String releaseBy = StringUtils.isEmpty(model.getReleasedBy()) ?
                        userInfoHolder.getUser().getUserId() : model.getReleasedBy();
 
+    // 调用 Admin Service API ，发布 Namespace 的配置。
+    // Release 数据库在 Admin Service，所以需要调用他们的API将数据入库
     ReleaseDTO releaseDTO = releaseAPI.createRelease(appId, env, clusterName, namespaceName,
                                                      model.getReleaseTitle(), model.getReleaseComment(),
                                                      releaseBy, isEmergencyPublish);

@@ -36,7 +36,7 @@ public class NamespaceController {
     if (managedEntity != null) {
       throw new BadRequestException("namespace already exist.");
     }
-
+    // 保存 Namespace 对象
     entity = namespaceService.save(entity);
 
     return BeanUtils.transform(NamespaceDTO.class, entity);

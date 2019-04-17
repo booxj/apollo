@@ -39,6 +39,8 @@ import org.springframework.core.env.PropertySource;
  * - {@link com.ctrip.framework.apollo.spring.annotation.ApolloConfigRegistrar}
  *
  * @author Jason Song(song_s@ctrip.com)
+ *
+ * BeanFactoryPostProcessor  的处理阶段在 bean加载之后，实例化之前 执行
  */
 public class PropertySourcesProcessor implements BeanFactoryPostProcessor, EnvironmentAware, PriorityOrdered {
   private static final Multimap<Integer, String> NAMESPACE_NAMES = LinkedHashMultimap.create();
@@ -55,7 +57,9 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
 
   @Override
   public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    // 初始化 PropertySource 们
     initializePropertySources();
+    // 初始化 AutoUpdateConfigChangeListener 对象，实现属性的自动更新
     initializeAutoUpdatePropertiesFeature(beanFactory);
   }
 
@@ -120,6 +124,7 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
     AutoUpdateConfigChangeListener autoUpdateConfigChangeListener = new AutoUpdateConfigChangeListener(
         environment, beanFactory);
 
+    // 注册 autoUpdateConfigChangeListener
     List<ConfigPropertySource> configPropertySources = configPropertySourceFactory.getAllConfigPropertySources();
     for (ConfigPropertySource configPropertySource : configPropertySources) {
       configPropertySource.addChangeListener(autoUpdateConfigChangeListener);

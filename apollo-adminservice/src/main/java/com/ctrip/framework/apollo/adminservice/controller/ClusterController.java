@@ -32,14 +32,17 @@ public class ClusterController {
                            @RequestParam(value = "autoCreatePrivateNamespace", defaultValue = "true") boolean autoCreatePrivateNamespace,
                            @Valid @RequestBody ClusterDTO dto) {
     Cluster entity = BeanUtils.transform(Cluster.class, dto);
+    // 判断 `name` 在 App 下是否已经存在对应的 Cluster 对象。若已经存在，抛出 BadRequestException 异常。
     Cluster managedEntity = clusterService.findOne(appId, entity.getName());
     if (managedEntity != null) {
       throw new BadRequestException("cluster already exist.");
     }
 
     if (autoCreatePrivateNamespace) {
+      // 保存 Cluster 对象，并创建其 Namespace
       entity = clusterService.saveWithInstanceOfAppNamespaces(entity);
     } else {
+      // 保存 Cluster 对象，不创建其 Namespace
       entity = clusterService.saveWithoutInstanceOfAppNamespaces(entity);
     }
 
