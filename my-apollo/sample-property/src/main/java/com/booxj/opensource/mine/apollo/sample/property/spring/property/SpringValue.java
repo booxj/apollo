@@ -9,12 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * @Company: 浙江核新同花顺网络信息股份有限公司
- * @ClassName: SpringValue.java
- * @Description: TODO
- * @Author: wangbo@myhexin.com
- * @CreateDate 2019/4/16 18:54
- * @version: 2.1.0
+ * 保存bean的引用和相关信息，通过反射实时配置修改的值
  */
 public class SpringValue {
 

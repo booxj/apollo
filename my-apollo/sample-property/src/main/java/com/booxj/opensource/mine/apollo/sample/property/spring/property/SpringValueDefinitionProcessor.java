@@ -1,10 +1,7 @@
 package com.booxj.opensource.mine.apollo.sample.property.spring.property;
 
 import com.booxj.opensource.mine.apollo.sample.property.spring.util.SpringInjector;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
@@ -25,8 +22,18 @@ import java.util.Set;
  * postProcessBeanDefinitionRegistry():用来注册更多的bean到spring容器
  */
 public class SpringValueDefinitionProcessor implements BeanDefinitionRegistryPostProcessor {
+
+    /**
+     * Multimap<String,SpringValueDefinition> == Map<String,Set<SpringValueDefinition>>
+     * <p>
+     * Map<BeanDefinitionRegistry, Multimap<String, SpringValueDefinition>>
+     * BeanDefinitionRegistry -> BeanDefinitionRegistry(IOC注册器)
+     * String -> BeanName
+     * SpringValueDefinition -> SpringValueDefinition(自定义Definition，用于保存bean的所有属性)
+     */
     private static final Map<BeanDefinitionRegistry, Multimap<String, SpringValueDefinition>> beanName2SpringValueDefinitions =
             Maps.newConcurrentMap();
+
     private static final Set<BeanDefinitionRegistry> PROPERTY_VALUES_PROCESSED_BEAN_FACTORIES = Sets.newConcurrentHashSet();
 
 
@@ -38,9 +45,7 @@ public class SpringValueDefinitionProcessor implements BeanDefinitionRegistryPos
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-//    if (configUtil.isAutoUpdateInjectedSpringPropertiesEnabled()) {
         processPropertyValues(registry);
-//    }
     }
 
     @Override
@@ -93,4 +98,5 @@ public class SpringValueDefinitionProcessor implements BeanDefinitionRegistryPos
             }
         }
     }
+
 }
